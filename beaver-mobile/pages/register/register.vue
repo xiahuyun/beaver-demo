@@ -9,12 +9,8 @@
 				</view>
 			</view>
 			
-			<view class="title">欢迎回来</view>
+			<view class="title">创建账号</view>
 			<view class="title_decoration"></view>
-			
-			<view class="welcome_text">
-				登录您的{{APP_CONFIG.name}}账号，开启社交新体验
-			</view>
 			
 			<view class="form-container">
 				<view class="form-group">
@@ -31,7 +27,7 @@
 					<input 
 						:type="passwordType" 
 						class="form-input" 
-						placeholder="登录密码"
+						placeholder="设置密码"
 						v-model="userInfo.password"
 						@input="inputPassword"
 					>
@@ -44,19 +40,31 @@
 					<view v-if="passwordTouched && !isPasswordValid" class="error_message">密码长度不少于13位，且必须包含大小写和数字</view>
 				</view>
 				
+				<view class="form-group">
+					<input 
+						:type="passwordType" 
+						class="form-input" 
+						placeholder="验证码"
+						v-model="userInfo.password"
+						@input="inputPassword"
+					>
+					<button class="verify-code">获取验证码</button>
+					<view v-if="passwordTouched && !isPasswordValid" class="error_message">验证码为8位数字</view>
+				</view>
+		
 				<view class="forgot-password">
 					<text class="jump-text" @click="navigateToPage('/pages/login/login')">忘记密码?</text>
 				</view>
-
+			
 				<button 
 					class="btn btn-primary" 
 					:class="{'btn-disabled': !isFormValid}"
 					@click="goHome"
-				>登录
+				>注册
 				</button>
-				
+					
 				<view class="register-link">
-					还没有账号？<text class="jump-text" @click="navigateToPage('/pages/register/register')">立即注册</text>
+					已有账号？<text class="jump-text" @click="navigateToPage('/pages/register/register')">登录</text>
 				</view>
 			</view>
 		</view>
@@ -64,6 +72,7 @@
 </template>
 
 <script setup lang="ts">
+
 import { resolve } from "dns";
 import { APP_CONFIG } from "@/config/data";
 import { reactive, ref, watch } from "vue";
@@ -90,6 +99,7 @@ const userInfo = reactive<UserInfo>({
 function inputEmail(): void {
 	emailTouched.value = true;
 }
+
 
 function inputPassword(): void {
 	passwordTouched.value = true;
@@ -122,18 +132,12 @@ function navigateToPage(url: string): void {
 	})
 }
 
-function goHome() {
-	console.log("go home");
-}
-
 </script>
 
 <style lang="scss" scoped>
-
 .container {
 	min-height: 100vh;
 	background-color: #FFFFFF;
-	// TODO: 为什么要设置 relative?
 	position: relative;
 }
 
@@ -160,7 +164,6 @@ function goHome() {
 	display: flex;
 	position: relative;
 	justify-content: center;
-	// TODO: 为什么加上这个属性就在 content 盒子里？
 	align-items: center;
 	box-shadow: 0 8rpx 24rpx rgba(255, 125, 69, 0.2);
 	border-radius: 32rpx;
@@ -194,13 +197,6 @@ function goHome() {
 	margin: 0 auto 48rpx;
 }
 
-.welcome_text {
-	font-size: 28rpx;
-	text-align: center;
-	color: #636E72;
-	margin-bottom: 64rpx;
-}
-
 .form-container {
 	margin-top: 20rpx;
 }
@@ -227,6 +223,7 @@ function goHome() {
 	height: 100%;
 }
 
+
 .error_message {
 	color: #FF7D45;
 	font-size: 24rpx;
@@ -244,15 +241,16 @@ function goHome() {
 	filter: brightness(0) saturate(100%) invert(67%) sepia(8%) saturate(123%) hue-rotate(169deg) brightness(89%) contrast(86%);
 }
 
-.forgot-password {
-	text-align: right;
-	margin-bottom: 48rpx;
-	
-	.jump-text {
-		color: #FF7D45;
-		font-size: 24rpx;
-		font-weight: 500;
-	}
+.verify-code {
+	width: 380rpx;
+	height: 80rpx;
+	background: linear-gradient(135deg, #FF7D45 0%, #E86835 100%);
+	color: white;
+	border-radius: 20rpx;
+	padding: 0rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .btn {
@@ -311,4 +309,5 @@ function goHome() {
 		font-weight: 500;
 	}
 }
+
 </style>
