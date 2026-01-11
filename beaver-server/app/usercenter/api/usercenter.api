@@ -1,0 +1,41 @@
+syntax = "v1"
+
+info (
+	title:   "用户中心"
+	desc:    "用户中心提供用户注册/登录/查询等服务"
+	author:  "xiahuyun"
+	email:   "xiahuyun043@126.com"
+	version: "v1"
+)
+
+type GetEmailVerificationCodeRequest {
+	Email string `json:"email"`
+	Type  string `json:"type"`
+}
+
+type GetEmailVerificationCodeResponse {
+	Message string `json:"message"`
+}
+
+type RegisterUserRequest {
+	Email            string `json:"email, optional"`
+	Phone            string `json:"phone, optional"`
+	Password         string `json:"password"`
+	VerificationCode string `json:"verificationCode"`
+	Type             string `json:"type"`
+}
+
+type RegisterUserResponse {
+	Message string `json:"message"`
+}
+
+service usercenter {
+	@doc "获取邮箱验证码"
+	@handler getEmailVerificationCode
+	post /api/auth/emailcode (GetEmailVerificationCodeRequest) returns (GetEmailVerificationCodeResponse)
+
+	@doc "注册用户"
+	@handler registerUser
+	post /api/auth/register (RegisterUserRequest) returns (RegisterUserResponse)
+}
+

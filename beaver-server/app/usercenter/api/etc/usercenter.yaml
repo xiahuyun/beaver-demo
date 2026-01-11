@@ -1,0 +1,13 @@
+Name: usercenter
+Host: 0.0.0.0
+Port: 20800
+
+Cache:
+  Addr: 127.0.0.1:6379
+  Password: "Troy@0403"
+  DB: 0 
+
+UsercenterRpc:
+  Endpoints: 
+  - 127.0.0.1:20801 
+  NonBlock: true
