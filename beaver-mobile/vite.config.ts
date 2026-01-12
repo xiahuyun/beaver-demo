@@ -4,7 +4,8 @@ import { resolve } from "node:path"
 
 const nodeRequire = createRequire(import.meta.url);
 const uni = nodeRequire("@dcloudio/vite-plugin-uni").default;
-
+const envConfig = nodeRequire('./env.json');
+const baseUrl = envConfig.baseUrl;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,5 +21,14 @@ export default defineConfig({
         api: 'modern-compiler', // or 'modern'
       },
     },
+  },
+  server: {
+	proxy: {
+		'/api': {
+			target: baseUrl,
+			changeOrigin: true,
+			rewrite: (path) => path
+		}
+	}
   }
 });

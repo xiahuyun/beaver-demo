@@ -41,11 +41,11 @@
 						:src="passwordType === 'password' ? '/static/login/eye.svg': '/static/login/eye-slash.svg'"
 						@click="togglePasswordVisibility"
 					/>
-					<view v-if="passwordTouched && !isPasswordValid" class="error_message">密码长度不少于13位，且必须包含大小写和数字</view>
+					<view v-if="passwordTouched && !isPasswordValid" class="error_message">密码长度不少于8位，且必须包含大小写和数字</view>
 				</view>
 				
 				<view class="forgot-password">
-					<text class="jump-text" @click="navigateToPage('/pages/login/login')">忘记密码?</text>
+					<text class="jump-text" @click="navigateToPage('/pages/forget/forget')">忘记密码?</text>
 				</view>
 
 				<button 
@@ -67,6 +67,8 @@
 import { resolve } from "dns";
 import { APP_CONFIG } from "@/config/data";
 import { reactive, ref, watch } from "vue";
+import { loginUserApi } from "@/src/api/auth";
+import { encodePassword } from "@/src/utils/encode/password";
 
 const emailTouched = ref(false);
 const isEmailValid = ref(false);
@@ -107,7 +109,7 @@ function validateEmail(email: string): boolean {
 }
 
 function validatePassword(password: string): boolean {
-	return password.length >= 13 && /[a-zA-Z]/.test(password) && /[0-9]/.test(password);
+	return password.length >= 8 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[0-9]/.test(password);
 }
 
 function togglePasswordVisibility(): void {
@@ -122,8 +124,32 @@ function navigateToPage(url: string): void {
 	})
 }
 
-function goHome() {
-	console.log("go home");
+function goHome(): void {
+	loginUserApi({
+		email: userInfo.email,
+		password: encodePassword(userInfo.password, APP_CONFIG.salt),
+		type: "email"
+	}).then((res) => {
+		if (res.code === 200) {
+			uni.reLaunch({
+				url: "/pages/home/home",
+				animationType: 'pop-in',
+				animationDuration: 200
+			});
+		} else {
+			uni.showToast({
+				title: res.message,
+				duration: 3000,
+				icon: 'error',
+			});
+		}
+	}).catch(() => {
+		uni.showToast({
+			title: '登录失败，请重试',
+			duration: 3000,
+			icon: 'error',
+		});
+	});
 }
 
 </script>

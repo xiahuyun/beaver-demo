@@ -16,6 +16,9 @@ export const APP_CONFIG = {
   email: '751135385@qq.com',
 
   logo: Logo,
+  
+  // 密码盐值
+  salt: '1waxde34rfvgy7ujnmko0',
 } as const;
 
 

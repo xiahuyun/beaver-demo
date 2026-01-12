@@ -17,7 +17,7 @@
 					<input 
 						type="email" 
 						class="form-input" 
-						v-model="userInfo.email"
+						v-model="registerInfo.email"
 						placeholder="邮箱地址"
 						@input="inputEmail"
 					>
@@ -28,7 +28,7 @@
 						:type="passwordType" 
 						class="form-input" 
 						placeholder="设置密码"
-						v-model="userInfo.password"
+						v-model="registerInfo.password"
 						@input="inputPassword"
 					>
 					<image 
@@ -37,34 +37,42 @@
 						:src="passwordType === 'password' ? '/static/login/eye.svg': '/static/login/eye-slash.svg'"
 						@click="togglePasswordVisibility"
 					/>
-					<view v-if="passwordTouched && !isPasswordValid" class="error_message">密码长度不少于13位，且必须包含大小写和数字</view>
+					<view v-if="passwordTouched && !isPasswordValid" class="error_message">密码长度不少于8位，且必须包含大小写和数字</view>
 				</view>
-				
+
 				<view class="form-group">
 					<input 
-						:type="passwordType" 
+						type="text" 
 						class="form-input" 
 						placeholder="验证码"
-						v-model="userInfo.password"
-						@input="inputPassword"
+						v-model="registerInfo.verificationCode"
+						@input="inputVerificationCode"
 					>
-					<button class="verify-code">获取验证码</button>
-					<view v-if="passwordTouched && !isPasswordValid" class="error_message">验证码为8位数字</view>
+					<button class="code-btn" :disabled="isCodeButtonDisabled" @click="sendVerificationCode">{{ isCodeButtonDisabled ? countdown + 's' : '获取验证码' }}</button>
+					<view v-if="codeBtnTouched && !isEmailValid" class="error_message">请输入有效邮箱</view>
+					<view v-if="verificationCodeTouched && !isVerificationCodeValid" class="error_message">验证码为6位数字</view>
 				</view>
-		
-				<view class="forgot-password">
-					<text class="jump-text" @click="navigateToPage('/pages/login/login')">忘记密码?</text>
+
+				<view class="agreement">
+					<view class="checkbox-wrapper">
+						<view class="custom-checkbox" :class="{ checked: isAgreed }" @click="toggleAgreement"></view>
+						<!--<checkbox :checked="isAgreed" @tap="toggleAgreement" style="opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100%;" />-->
+						<text class="agreement-text">我已阅读并同意</text>
+						<text class="link" @click="navigateToPage('/pages/agreement/agreement')">用户协议</text>
+						<text class="agreement-text">和</text>
+						<text class="link" @click="navigateToPage('/pages/privacy/privacy')">隐私政策</text>
+					</view>
 				</view>
-			
+
 				<button 
 					class="btn btn-primary" 
 					:class="{'btn-disabled': !isFormValid}"
-					@click="goHome"
+					@click="register"
 				>注册
 				</button>
 					
 				<view class="register-link">
-					已有账号？<text class="jump-text" @click="navigateToPage('/pages/register/register')">登录</text>
+					已有账号？<text class="jump-text" @click="navigateToPage('/pages/login/login')">登录</text>
 				</view>
 			</view>
 		</view>
@@ -76,6 +84,8 @@
 import { resolve } from "dns";
 import { APP_CONFIG } from "@/config/data";
 import { reactive, ref, watch } from "vue";
+import { getEmailCodeApi,registerUserApi } from "@/src/api/auth";
+import { encodePassword } from "@/src/utils/encode/password";
 
 const emailTouched = ref(false);
 const isEmailValid = ref(false);
@@ -84,31 +94,96 @@ const passwordType = ref("password");
 const passwordTouched = ref(false);
 const isPasswordValid = ref(false);
 
+const verificationCodeTouched = ref(false);
+const isVerificationCodeValid = ref(false);
+
 const isFormValid = ref(false);
 
-interface userInfo {
+const countdown = ref(60);
+const isCodeButtonDisabled = ref(false);
+
+const codeBtnTouched = ref(false);
+
+interface RegisterInfo {
 	email: string;
 	password: string;
+	verificationCode: string;
 }
 
-const userInfo = reactive<UserInfo>({
+const registerInfo = reactive<RegisterInfo>({
 	email: "",
-	password: ""
+	password: "",
+	verificationCode: "",
 })
 
 function inputEmail(): void {
 	emailTouched.value = true;
 }
 
+function register(): void {
+	registerUserApi({
+		email: registerInfo.email,
+		password: encodePassword(registerInfo.password, APP_CONFIG.salt),
+		verificationCode: registerInfo.verificationCode,
+		type: "email"
+	}).then((res) => {
+		if (res.code === 200) {
+			uni.reLaunch({
+				url: "/pages/login/login",
+				animationType: 'pop-in',
+				animationDuration: 200
+			});
+		} else {
+			uni.showToast({
+				title: res.message,
+				duration: 3000,
+				icon: 'error',
+			});
+		}
+	}).catch(() => {
+		uni.showToast({
+			title: '注册失败，请重试',
+			duration: 3000,
+			icon: 'error',
+		});
+	});
+}
 
 function inputPassword(): void {
 	passwordTouched.value = true;
 }
 
-watch([() => userInfo.email, () => userInfo.password], () => {
-	isEmailValid.value = validateEmail(userInfo.email);
-	isPasswordValid.value = validatePassword(userInfo.password);
-	isFormValid.value = isEmailValid.value && isPasswordValid.value;
+function inputVerificationCode(): void {
+	verificationCodeTouched.value = true;
+}
+
+function sendVerificationCode(): void {
+	codeBtnTouched.value = true;
+	if (!isEmailValid.value) {
+		return
+	}
+
+	getEmailCodeApi({
+		email: registerInfo.email,
+		type: "register"
+	}).then((res) => {
+		console.log(res);
+	}).catch((error) => {
+		console.log(error);
+	})
+}
+
+const isAgreed = ref(false)
+
+function toggleAgreement(): void {
+	isAgreed.value = !isAgreed.value;
+}
+
+watch([()=>registerInfo.email, ()=>registerInfo.password, ()=>registerInfo.verificationCode, ()=>isAgreed.value], () => {
+	isEmailValid.value = validateEmail(registerInfo.email);
+	isPasswordValid.value = validatePassword(registerInfo.password);
+	isVerificationCodeValid.value = validateVerificationCode(registerInfo.verificationCode);
+	isFormValid.value = isEmailValid.value && isPasswordValid.value && isVerificationCodeValid.value && isAgreed.value;
 })
 
 function validateEmail(email: string): boolean {
@@ -117,7 +192,11 @@ function validateEmail(email: string): boolean {
 }
 
 function validatePassword(password: string): boolean {
-	return password.length >= 13 && /[a-zA-Z]/.test(password) && /[0-9]/.test(password);
+	return password.length >= 8 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[0-9]/.test(password);
+}
+
+function validateVerificationCode(verificationCode: string): boolean {
+	return verificationCode.length == 6 && /^[0-9]*$/.test(verificationCode);
 }
 
 function togglePasswordVisibility(): void {
@@ -241,9 +320,9 @@ function navigateToPage(url: string): void {
 	filter: brightness(0) saturate(100%) invert(67%) sepia(8%) saturate(123%) hue-rotate(169deg) brightness(89%) contrast(86%);
 }
 
-.verify-code {
-	width: 380rpx;
-	height: 80rpx;
+.code-btn {
+	width: 210rpx;
+	height: 70rpx;
 	background: linear-gradient(135deg, #FF7D45 0%, #E86835 100%);
 	color: white;
 	border-radius: 20rpx;
@@ -251,6 +330,22 @@ function navigateToPage(url: string): void {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	font-size: 25rpx;
+
+	&:active {
+		transform: translateY(-5%) translateY(1px);
+		box-shadow: 0 1px 4px rgba(255, 125, 69, 0.1);
+	}
+
+	&[disabled] {
+		opacity: 1;
+		background: gray;
+		color: white;
+		box-shadow: 0 2px 8px rgba(255, 125, 69, 0.15);
+		cursor: not-allowed;
+		pointer-events: none;
+		
+	}
 }
 
 .btn {
@@ -308,6 +403,60 @@ function navigateToPage(url: string): void {
 		color: #FF7D45;
 		font-weight: 500;
 	}
+}
+
+.agreement {
+	display: flex;
+	align-items: center;
+	font-size: 24rpx;
+	color: #636E72;
+	margin: 24rpx 0;
+}
+
+.checkbox-wrapper {
+  position: relative;
+  margin-right: 20rpx;
+  display: flex;
+  align-items: center;
+}
+
+.custom-checkbox {
+	border: 2rpx solid #B2BEC3;
+	position: relative;
+	height: 36rpx;
+	width: 36rpx;
+	display: inline-box;
+	background: #FFFFFF;
+	cursor: pointer;
+	transition: all 0.2s;
+	border-radius: 10rpx;
+	
+	&.checked {
+		background: #FF7D45;
+		border-color: #FF7D45;
+	
+		&:after {
+			content: '';
+			position: absolute;
+			left: 12rpx;
+			top: 6rpx;
+			width: 8rpx;
+			height: 16rpx;
+			border: solid white;
+			border-width: 0rpx 4rpx 4rpx 0rpx;
+			transform: rotate(45deg);
+		}
+	}
+}
+
+.agreement-text {
+	color: #636E72;
+	padding-left: 5rpx;
+}
+
+.link {
+	color: #FF7D45;
+	font-weight: 500;
 }
 
 </style>

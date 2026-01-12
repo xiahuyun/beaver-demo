@@ -31,3 +31,12 @@ declare module '*.css'
 declare module '*.less'
 declare module '*.scss'
 declare module '*.sass'
+
+// env.json 类型定义
+declare module '@/env.json' {
+  const env: {
+    baseUrl: string
+  }
+  export default env
+  export const baseUrl: string
+}
