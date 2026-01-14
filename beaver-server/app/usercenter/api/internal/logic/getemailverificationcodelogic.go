@@ -4,6 +4,7 @@
 package logic
 
 import (
+	ptypes "beaver-server/app/pkg/types"
 	"beaver-server/app/usercenter/api/internal/svc"
 	"beaver-server/app/usercenter/api/internal/types"
 	"context"
@@ -20,7 +21,7 @@ import (
 const (
 	VerificationCodeLength         = 6
 	VerificationCodeCharSet        = "123456789"
-	VerificationCodeExpireDuration = time.Minute * 5
+	VerificationCodeExpireDuration = time.Minute * 1
 )
 
 type GetEmailVerificationCodeLogic struct {
@@ -39,6 +40,11 @@ func NewGetEmailVerificationCodeLogic(ctx context.Context, svcCtx *svc.ServiceCo
 }
 
 func (l *GetEmailVerificationCodeLogic) GetEmailVerificationCode(req *types.GetEmailVerificationCodeRequest) (resp *types.GetEmailVerificationCodeResponse, err error) {
+	if (req.Type != ptypes.RegisterVerificationCodeType) && (req.Type != ptypes.ResetVerificationCodeType) {
+		l.Logger.Errorf("request id %s verification code type %s not support", l.ctx.Value("requestId"), req.Type)
+		return nil, fmt.Errorf("request id %s verification code type %s not support", l.ctx.Value("requestId"), req.Type)
+	}
+
 	verificationCode := l.GenerateEmailVerificationCode()
 	l.Logger.Infof("generate request id %s verification code %s", l.ctx.Value("requestId"), verificationCode)
 

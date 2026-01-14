@@ -14,16 +14,20 @@ import (
 )
 
 type (
-	LoginUserReq     = pb.LoginUserReq
-	LoginUserResp    = pb.LoginUserResp
-	RegisterUserReq  = pb.RegisterUserReq
-	RegisterUserResp = pb.RegisterUserResp
+	LoginUserReq      = pb.LoginUserReq
+	LoginUserResp     = pb.LoginUserResp
+	RegisterUserReq   = pb.RegisterUserReq
+	RegisterUserResp  = pb.RegisterUserResp
+	ResetPasswordReq  = pb.ResetPasswordReq
+	ResetPasswordResp = pb.ResetPasswordResp
 
 	Usercenter interface {
 		// 注册用户
 		RegisterUser(ctx context.Context, in *RegisterUserReq, opts ...grpc.CallOption) (*RegisterUserResp, error)
 		// 用户登录
 		LoginUser(ctx context.Context, in *LoginUserReq, opts ...grpc.CallOption) (*LoginUserResp, error)
+		// 重置密码
+		ResetPassword(ctx context.Context, in *ResetPasswordReq, opts ...grpc.CallOption) (*ResetPasswordResp, error)
 	}
 
 	defaultUsercenter struct {
@@ -47,4 +51,10 @@ func (m *defaultUsercenter) RegisterUser(ctx context.Context, in *RegisterUserRe
 func (m *defaultUsercenter) LoginUser(ctx context.Context, in *LoginUserReq, opts ...grpc.CallOption) (*LoginUserResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.LoginUser(ctx, in, opts...)
+}
+
+// 重置密码
+func (m *defaultUsercenter) ResetPassword(ctx context.Context, in *ResetPasswordReq, opts ...grpc.CallOption) (*ResetPasswordResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.ResetPassword(ctx, in, opts...)
 }

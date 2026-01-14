@@ -32,6 +32,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/api/auth/register",
 				Handler: registerUserHandler(serverCtx),
 			},
+			{
+				// 重置密码
+				Method:  http.MethodPost,
+				Path:    "/api/auth/resetpassword",
+				Handler: resetPasswordHandler(serverCtx),
+			},
 		},
 	)
 }

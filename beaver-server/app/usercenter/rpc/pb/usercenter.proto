@@ -24,10 +24,22 @@ message LoginUserResp {
     string message = 1;
 }
 
+message ResetPasswordReq {
+    string  email = 1;
+    string  newPassword =2;
+}
+
+message ResetPasswordResp {
+    string message = 1;
+}
+
 service usercenter {
     // 注册用户
     rpc registerUser(RegisterUserReq)returns(RegisterUserResp);
 
     // 用户登录
     rpc loginUser(LoginUserReq)returns(LoginUserResp);
+
+    // 重置密码
+    rpc resetPassword(ResetPasswordReq)returns(ResetPasswordResp);
 }

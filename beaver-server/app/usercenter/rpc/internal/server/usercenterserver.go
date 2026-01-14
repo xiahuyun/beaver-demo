@@ -34,3 +34,9 @@ func (s *UsercenterServer) LoginUser(ctx context.Context, in *pb.LoginUserReq) (
 	l := logic.NewLoginUserLogic(ctx, s.svcCtx)
 	return l.LoginUser(in)
 }
+
+// 重置密码
+func (s *UsercenterServer) ResetPassword(ctx context.Context, in *pb.ResetPasswordReq) (*pb.ResetPasswordResp, error) {
+	l := logic.NewResetPasswordLogic(ctx, s.svcCtx)
+	return l.ResetPassword(in)
+}

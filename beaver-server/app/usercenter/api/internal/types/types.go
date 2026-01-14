@@ -36,3 +36,14 @@ type RegisterUserResponse struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
+
+type ResetPasswordRequest struct {
+	Email            string `json:"email"`
+	NewPassword      string `json:"newPassword"`
+	VerificationCode string `json:"verificationCode"`
+}
+
+type ResetPasswordResponse struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
