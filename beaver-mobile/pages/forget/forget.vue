@@ -69,7 +69,8 @@
 
 import { APP_CONFIG } from "@/config/data";
 import { reactive, ref, watch } from "vue";
-import { getEmailCodeApi } from "@/src/api/auth";
+import { getEmailCodeApi, resetPasswordApi } from "@/src/api/auth";
+import { encodePassword } from "@/src/utils/encode/password";
 
 const verificationCodeTouched = ref(false);
 const emailTouched = ref(false);
@@ -176,7 +177,23 @@ function sendVerificationCode(): void {
 }
 
 function resetPassword(): void {
-	console.log(resetInfo.email, resetInfo.verificationCode, resetInfo.newPassword);
+
+	isCodeButtonDisabled.value = false;
+	countdown.value = 60;
+	
+	resetPasswordApi({
+		email: resetInfo.email,
+		newPassword: encodePassword(resetInfo.newPassword, APP_CONFIG.salt),
+		verificationCode: resetInfo.verificationCode,
+	}).then((res) => {
+		if (res.code === 200) {
+			uni.reLaunch({url: "/pages/login/login",animationType: 'pop-in',animationDuration: 200});
+		} else {
+			uni.showToast({title: res.message,duration: 3000,icon: 'error'});
+		}
+	}).catch(() => {
+		uni.showToast({title: '注册失败，请重试',duration: 3000,icon: 'error'});
+	});
 }
 
 function navigateToPage(url: string): void {

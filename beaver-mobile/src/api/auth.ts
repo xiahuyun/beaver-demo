@@ -40,3 +40,14 @@ export const loginUserApi = (data: ILoginUserReq) => {
     url: `/api/auth/login`
   })
 }
+
+/**
+ * @description: 用户登录
+ */
+export const resetPasswordApi = (data: ILoginUserReq) => {
+  return request<ILoginUserRes>({
+    method: 'POST',
+    data,
+    url: `/api/auth/resetpassword`
+  })
+}

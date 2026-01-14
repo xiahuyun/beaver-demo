@@ -37,3 +37,16 @@ export interface ILoginUserRes {
 	code: number;
 	message: string;
 }
+
+// 重置密码请求
+export interface IResetPasswordReq {
+	email: string;
+	verificationCode: string;
+	newPassword: string;
+}
+
+// 重置密码响应
+export interface IResetPasswordRes {
+	code: number;
+	message: string;
+}
