@@ -167,6 +167,24 @@ function sendVerificationCode(): void {
 		email: registerInfo.email,
 		type: "register"
 	}).then((res) => {
+		if (res.code === 200) {
+			uni.showToast({
+			  title: '验证码已发送',
+			  duration: 2000
+			});
+			
+			isCodeButtonDisabled.value = true;
+			let counter = countdown.value;
+			const interval = setInterval(() => {
+				counter -= 1;
+				countdown.value = counter;
+				if (counter <= 0) {
+					clearInterval(interval);
+					isCodeButtonDisabled.value = false;
+					countdown.value = 60;
+				}
+			}, 1000);
+		}
 		console.log(res);
 	}).catch((error) => {
 		console.log(error);
@@ -338,13 +356,12 @@ function navigateToPage(url: string): void {
 	}
 
 	&[disabled] {
-		opacity: 1;
-		background: gray;
+		opacity: 0.6;
+		background: linear-gradient(135deg, #FF7D45 0%, #E86835 100%);
 		color: white;
 		box-shadow: 0 2px 8px rgba(255, 125, 69, 0.15);
 		cursor: not-allowed;
 		pointer-events: none;
-		
 	}
 }
 
@@ -361,14 +378,6 @@ function navigateToPage(url: string): void {
 	align-items: center;
 	position: relative;
 	font-size: 32rpx;
-	
-	&.btn-disabled {
-		background: #ccc ;
-		color: #999;
-		box-shadow: none;
-		cursor: not-allowed;
-		pointer-events: none;
-	}
 
 	&.btn-primary {
 		background: linear-gradient(135deg, #FF7D45 0%, #E86835 100%);
@@ -376,9 +385,11 @@ function navigateToPage(url: string): void {
 		box-shadow: 0 8rpx 24rpx rgba(255, 125, 69, 0.15);
 
 		&.btn-disabled {
-			background: #ccc;
+			background: linear-gradient(135deg, #FF7D45 0%, #E86835 100%);
+			opacity: 0.6;
 			box-shadow: none;
 			pointer-events: none;
+			cursor: not-allowed;
 		}
 
 		&:hover {

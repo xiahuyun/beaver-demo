@@ -79,7 +79,7 @@ const isPasswordValid = ref(false);
 
 const isFormValid = ref(false);
 
-interface userInfo {
+interface UserInfo {
 	email: string;
 	password: string;
 }
@@ -127,23 +127,33 @@ function navigateToPage(url: string): void {
 function goHome(): void {
 	loginUserApi({
 		email: userInfo.email,
-		password: encodePassword(userInfo.password, APP_CONFIG.salt),
-		type: "email"
+		password: encodePassword(userInfo.password, APP_CONFIG.salt)
 	}).then((res) => {
 		if (res.code === 200) {
+			console.log(res);
 			uni.reLaunch({
 				url: "/pages/home/home",
 				animationType: 'pop-in',
 				animationDuration: 200
 			});
 		} else {
-			uni.showToast({
-				title: res.message,
-				duration: 3000,
-				icon: 'error',
-			});
+			console.log("err", res)
+			if (res == '' || res.message == 'undefined') {
+				uni.showToast({
+					title: '登录失败',
+					duration: 3000,
+					icon: 'error',
+				});
+			} else {
+				uni.showToast({
+					title: res.message,
+					duration: 3000,
+					icon: 'error',
+				});
+			}
 		}
 	}).catch(() => {
+		console.log(res);
 		uni.showToast({
 			title: '登录失败，请重试',
 			duration: 3000,
@@ -294,14 +304,6 @@ function goHome(): void {
 	align-items: center;
 	position: relative;
 	font-size: 32rpx;
-	
-	&.btn-disabled {
-		background: #ccc ;
-		color: #999;
-		box-shadow: none;
-		cursor: not-allowed;
-		pointer-events: none;
-	}
 
 	&.btn-primary {
 		background: linear-gradient(135deg, #FF7D45 0%, #E86835 100%);
@@ -309,9 +311,11 @@ function goHome(): void {
 		box-shadow: 0 8rpx 24rpx rgba(255, 125, 69, 0.15);
 
 		&.btn-disabled {
-			background: #ccc;
+			background: linear-gradient(135deg, #FF7D45 0%, #E86835 100%);
 			box-shadow: none;
 			pointer-events: none;
+			cursor: not-allowed;
+			opacity: 0.6;
 		}
 
 		&:hover {
