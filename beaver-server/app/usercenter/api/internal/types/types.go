@@ -9,7 +9,19 @@ type GetEmailVerificationCodeRequest struct {
 }
 
 type GetEmailVerificationCodeResponse struct {
+	Code    int    `json:"code"`
 	Message string `json:"message"`
+}
+
+type LoginUserRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type LoginUserResponse struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Token   string `json:"token"`
 }
 
 type RegisterUserRequest struct {
@@ -21,5 +33,6 @@ type RegisterUserRequest struct {
 }
 
 type RegisterUserResponse struct {
+	Code    int    `json:"code"`
 	Message string `json:"message"`
 }

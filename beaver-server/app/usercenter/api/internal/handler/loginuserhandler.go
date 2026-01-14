@@ -4,7 +4,6 @@
 package handler
 
 import (
-	"context"
 	"net/http"
 
 	"beaver-server/app/usercenter/api/internal/logic"
@@ -14,23 +13,19 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-// 注册用户
-func registerUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+// 用户登录
+func loginUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.RegisterUserRequest
+		var req types.LoginUserRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		// TODO: add middleware to set requestId
-		requestId := r.Header.Get("requestId")
-		r = r.WithContext(context.WithValue(r.Context(), "requestId", requestId))
-
-		l := logic.NewRegisterUserLogic(r.Context(), svcCtx)
-		resp, err := l.RegisterUser(&req)
+		l := logic.NewLoginUserLogic(r.Context(), svcCtx)
+		resp, err := l.LoginUser(&req)
 		if err != nil {
-			httpx.OkJsonCtx(r.Context(), w, &types.RegisterUserResponse{
+			httpx.OkJsonCtx(r.Context(), w, &types.LoginUserResponse{
 				Code:    http.StatusBadRequest,
 				Message: err.Error(),
 			})

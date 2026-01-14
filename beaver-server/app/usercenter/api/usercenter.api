@@ -14,6 +14,7 @@ type GetEmailVerificationCodeRequest {
 }
 
 type GetEmailVerificationCodeResponse {
+	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
 
@@ -26,7 +27,20 @@ type RegisterUserRequest {
 }
 
 type RegisterUserResponse {
+	Code    int    `json:"code"`
 	Message string `json:"message"`
+}
+
+// only support email login right now
+type LoginUserRequest {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type LoginUserResponse {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Token   string `json:"token"`
 }
 
 service usercenter {
@@ -37,5 +51,9 @@ service usercenter {
 	@doc "注册用户"
 	@handler registerUser
 	post /api/auth/register (RegisterUserRequest) returns (RegisterUserResponse)
+
+	@doc "用户登录"
+	@handler loginUser
+	post /api/auth/login (LoginUserRequest) returns (LoginUserResponse)
 }
 

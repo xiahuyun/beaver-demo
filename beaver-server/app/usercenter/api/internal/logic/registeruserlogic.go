@@ -6,6 +6,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"regexp"
 
 	"beaver-server/app/usercenter/api/internal/svc"
@@ -50,15 +51,15 @@ func (l *RegisterUserLogic) RegisterUserByEmail(req *types.RegisterUserRequest) 
 
 	cacheVerificationCode, err := l.svcCtx.Redis.Get(l.ctx, GetEmailVerificationCodeKey(req.Email, "register")).Result()
 	if err != nil {
-		return nil, fmt.Errorf("email %s %s verification code expired or not exists, err: %v", req.Email, "register", err)
+		return nil, fmt.Errorf("验证码过期或不存在")
 	}
 	if cacheVerificationCode != req.VerificationCode {
-		return nil, fmt.Errorf("email %s %s verification code not match, err: %v", req.Email, "register", err)
+		return nil, fmt.Errorf("验证码错误")
 	}
 	l.svcCtx.Redis.Del(l.ctx, GetEmailVerificationCodeKey(req.Email, "register"))
 
 	if !isEmailValid(req.Email) {
-		return nil, fmt.Errorf("email %s is invalid, must be in format of user@example.com", req.Email)
+		return nil, fmt.Errorf("无效的邮箱格式")
 	}
 
 	resp = &types.RegisterUserResponse{}
@@ -68,11 +69,13 @@ func (l *RegisterUserLogic) RegisterUserByEmail(req *types.RegisterUserRequest) 
 		RegisterType: req.Type,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("register user %s type %s failed, err: %v", req.Email, req.Type, err)
+		l.Logger.Errorf("注册邮箱用户 %s 失败: %v", req.Email, err)
+		return nil, err
 	}
 
 	logx.Infof("register user %s type %s success, message: %s", req.Email, req.Type, rpcResp.Message)
 	resp.Message = rpcResp.Message
+	resp.Code = http.StatusOK
 	return resp, nil
 }
 
@@ -80,10 +83,10 @@ func (l *RegisterUserLogic) RegisterUserByPhone(req *types.RegisterUserRequest) 
 
 	cacheVerificationCode, err := l.svcCtx.Redis.Get(l.ctx, GetPhoneVerificationCodeKey(req.Phone, "register")).Result()
 	if err != nil {
-		return nil, fmt.Errorf("phone %s type %s verification code expired or not exists, err: %v", req.Phone, "register", err)
+		return nil, fmt.Errorf("验证码过期或不存在")
 	}
 	if cacheVerificationCode != req.VerificationCode {
-		return nil, fmt.Errorf("phone %s type %s verification code not match, err: %v", req.Phone, "register", err)
+		return nil, fmt.Errorf("验证码错误")
 	}
 	l.svcCtx.Redis.Del(l.ctx, GetPhoneVerificationCodeKey(req.Phone, "register"))
 
@@ -103,6 +106,7 @@ func (l *RegisterUserLogic) RegisterUserByPhone(req *types.RegisterUserRequest) 
 
 	logx.Infof("register user %s type %s success, message: %s", req.Phone, req.Type, rpcResp.Message)
 	resp.Message = rpcResp.Message
+	resp.Code = http.StatusOK
 	return resp, nil
 }
 

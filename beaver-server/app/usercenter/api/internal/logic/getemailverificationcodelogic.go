@@ -9,6 +9,7 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
+	"net/http"
 	"strings"
 	"time"
 
@@ -56,6 +57,7 @@ func (l *GetEmailVerificationCodeLogic) GetEmailVerificationCode(req *types.GetE
 
 	resp = &types.GetEmailVerificationCodeResponse{
 		Message: "send verification code success",
+		Code:    http.StatusOK,
 	}
 	return resp, nil
 }

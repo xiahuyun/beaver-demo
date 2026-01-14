@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Usercenter_RegisterUser_FullMethodName = "/pb.usercenter/registerUser"
+	Usercenter_LoginUser_FullMethodName    = "/pb.usercenter/loginUser"
 )
 
 // UsercenterClient is the client API for Usercenter service.
@@ -28,6 +29,8 @@ const (
 type UsercenterClient interface {
 	// 注册用户
 	RegisterUser(ctx context.Context, in *RegisterUserReq, opts ...grpc.CallOption) (*RegisterUserResp, error)
+	// 用户登录
+	LoginUser(ctx context.Context, in *LoginUserReq, opts ...grpc.CallOption) (*LoginUserResp, error)
 }
 
 type usercenterClient struct {
@@ -48,12 +51,24 @@ func (c *usercenterClient) RegisterUser(ctx context.Context, in *RegisterUserReq
 	return out, nil
 }
 
+func (c *usercenterClient) LoginUser(ctx context.Context, in *LoginUserReq, opts ...grpc.CallOption) (*LoginUserResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LoginUserResp)
+	err := c.cc.Invoke(ctx, Usercenter_LoginUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsercenterServer is the server API for Usercenter service.
 // All implementations must embed UnimplementedUsercenterServer
 // for forward compatibility.
 type UsercenterServer interface {
 	// 注册用户
 	RegisterUser(context.Context, *RegisterUserReq) (*RegisterUserResp, error)
+	// 用户登录
+	LoginUser(context.Context, *LoginUserReq) (*LoginUserResp, error)
 	mustEmbedUnimplementedUsercenterServer()
 }
 
@@ -66,6 +81,9 @@ type UnimplementedUsercenterServer struct{}
 
 func (UnimplementedUsercenterServer) RegisterUser(context.Context, *RegisterUserReq) (*RegisterUserResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterUser not implemented")
+}
+func (UnimplementedUsercenterServer) LoginUser(context.Context, *LoginUserReq) (*LoginUserResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
 }
 func (UnimplementedUsercenterServer) mustEmbedUnimplementedUsercenterServer() {}
 func (UnimplementedUsercenterServer) testEmbeddedByValue()                    {}
@@ -106,6 +124,24 @@ func _Usercenter_RegisterUser_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Usercenter_LoginUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).LoginUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Usercenter_LoginUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).LoginUser(ctx, req.(*LoginUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Usercenter_ServiceDesc is the grpc.ServiceDesc for Usercenter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -116,6 +152,10 @@ var Usercenter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "registerUser",
 			Handler:    _Usercenter_RegisterUser_Handler,
+		},
+		{
+			MethodName: "loginUser",
+			Handler:    _Usercenter_LoginUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

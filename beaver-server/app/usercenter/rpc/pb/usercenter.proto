@@ -15,7 +15,19 @@ message RegisterUserResp {
     string message = 1;
 }
 
+message LoginUserReq {
+    string  email = 1;
+    string  password = 2;
+}
+
+message LoginUserResp {
+    string message = 1;
+}
+
 service usercenter {
     // 注册用户
     rpc registerUser(RegisterUserReq)returns(RegisterUserResp);
+
+    // 用户登录
+    rpc loginUser(LoginUserReq)returns(LoginUserResp);
 }

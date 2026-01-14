@@ -40,19 +40,19 @@ func (l *RegisterUserLogic) RegisterUser(in *pb.RegisterUserReq) (*pb.RegisterUs
 
 func (l *RegisterUserLogic) RegisterUserByEmail(in *pb.RegisterUserReq) (*pb.RegisterUserResp, error) {
 
-	l.Logger.Infof("register email user: %v", *in.Email)
+	l.Logger.Infof("注册邮箱用户: %v", *in.Email)
 
-	l.Logger.Infof("check whether the user email %s exists", *in.Email)
+	l.Logger.Infof("检查邮箱 %s 是否存在", *in.Email)
 	exist, err := l.svcCtx.UserModel.FindOneByEmail(l.ctx, *in.Email)
 	if err != nil && err != model.ErrNotFound {
-		l.Logger.Errorf("check user email %s error: %v", *in.Email, err)
+		l.Logger.Errorf("检查邮箱 %s 是否存在时出错: %v", *in.Email, err)
 		return nil, err
 	}
 	if exist != nil {
-		return nil, fmt.Errorf("email %s already exists", *in.Email)
+		return nil, fmt.Errorf("邮箱 %s 已存在", *in.Email)
 	}
 
-	l.Logger.Infof("user email %s not exists, register the user", *in.Email)
+	l.Logger.Infof("邮箱 %s 不存在，注册用户", *in.Email)
 	result, err := l.svcCtx.UserModel.Insert(l.ctx, &model.User{
 		Email:        *in.Email,
 		Password:     in.Password,
@@ -66,9 +66,9 @@ func (l *RegisterUserLogic) RegisterUserByEmail(in *pb.RegisterUserReq) (*pb.Reg
 		return nil, err
 	}
 
-	l.Logger.Infof("register email user %s success, userID: %d", *in.Email, userID)
+	l.Logger.Infof("邮箱 %s 注册成功，用户ID: %d", *in.Email, userID)
 	return &pb.RegisterUserResp{
-		Message: fmt.Sprintf("register email user %s success, userID: %d", *in.Email, userID),
+		Message: fmt.Sprintf("用户 %s 注册成功", *in.Email),
 	}, nil
 }
 

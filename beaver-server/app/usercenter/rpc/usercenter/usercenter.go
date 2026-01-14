@@ -14,12 +14,16 @@ import (
 )
 
 type (
+	LoginUserReq     = pb.LoginUserReq
+	LoginUserResp    = pb.LoginUserResp
 	RegisterUserReq  = pb.RegisterUserReq
 	RegisterUserResp = pb.RegisterUserResp
 
 	Usercenter interface {
 		// 注册用户
 		RegisterUser(ctx context.Context, in *RegisterUserReq, opts ...grpc.CallOption) (*RegisterUserResp, error)
+		// 用户登录
+		LoginUser(ctx context.Context, in *LoginUserReq, opts ...grpc.CallOption) (*LoginUserResp, error)
 	}
 
 	defaultUsercenter struct {
@@ -37,4 +41,10 @@ func NewUsercenter(cli zrpc.Client) Usercenter {
 func (m *defaultUsercenter) RegisterUser(ctx context.Context, in *RegisterUserReq, opts ...grpc.CallOption) (*RegisterUserResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.RegisterUser(ctx, in, opts...)
+}
+
+// 用户登录
+func (m *defaultUsercenter) LoginUser(ctx context.Context, in *LoginUserReq, opts ...grpc.CallOption) (*LoginUserResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.LoginUser(ctx, in, opts...)
 }

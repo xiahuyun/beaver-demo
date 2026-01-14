@@ -28,3 +28,9 @@ func (s *UsercenterServer) RegisterUser(ctx context.Context, in *pb.RegisterUser
 	l := logic.NewRegisterUserLogic(ctx, s.svcCtx)
 	return l.RegisterUser(in)
 }
+
+// 用户登录
+func (s *UsercenterServer) LoginUser(ctx context.Context, in *pb.LoginUserReq) (*pb.LoginUserResp, error) {
+	l := logic.NewLoginUserLogic(ctx, s.svcCtx)
+	return l.LoginUser(in)
+}

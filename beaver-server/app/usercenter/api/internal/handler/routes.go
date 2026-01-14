@@ -21,6 +21,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: getEmailVerificationCodeHandler(serverCtx),
 			},
 			{
+				// 用户登录
+				Method:  http.MethodPost,
+				Path:    "/api/auth/login",
+				Handler: loginUserHandler(serverCtx),
+			},
+			{
 				// 注册用户
 				Method:  http.MethodPost,
 				Path:    "/api/auth/register",

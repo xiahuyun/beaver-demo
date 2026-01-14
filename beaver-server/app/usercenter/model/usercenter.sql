@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS user;
 /*
 * delete user for debug
 */
-DELETE FROM user WHERE id = 4;
+DELETE FROM user WHERE email = 'xiahuyun043@126.com';
 
 CREATE TABLE user (
     id bigint NOT NULL AUTO_INCREMENT,
