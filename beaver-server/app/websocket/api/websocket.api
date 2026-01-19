@@ -1,0 +1,23 @@
+syntax = "v1"
+
+info (
+	title:   "Websocket"
+	desc:    "Websocket服务"
+	author:  "xiahuyun"
+	email:   "xiahuyun043@126.com"
+	version: "v1"
+)
+
+type ChatWebsocketRequest {
+	UserID string `header:"Beaver-User-Id"` // 用户ID，用于身份识别
+	Token  string `header:"token"` // 用户token，用于验证
+}
+
+type ChatWebsocketResponse {}
+
+service websocket {
+	@doc "WebSocket连接"
+	@handler chatWebsocket
+	get /api/chat/websocket (ChatWebsocketRequest) returns (ChatWebsocketResponse)
+}
+

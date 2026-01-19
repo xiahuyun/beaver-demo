@@ -1,0 +1,8 @@
+Name: websocket
+Host: 0.0.0.0
+Port: 20802
+
+WebSocket:
+  DefaultReadLimit: 1048576 # 最大消息大小(字节), 1MB
+  DefaultReadTimeout: 300 # 读取超时时间(秒), 300秒
+  DefaultWriteTimeout: 150 # 写入超时时间(秒), 150秒
