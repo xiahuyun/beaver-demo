@@ -53,6 +53,15 @@ type ResetPasswordResponse {
 	Message string `json:"message"`
 }
 
+type AuthenticationUserRequest {
+	Token string `header:"Token,optional"`
+}
+
+type AuthenticationUserResponse {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
 service usercenter {
 	@doc "获取邮箱验证码"
 	@handler getEmailVerificationCode
@@ -69,5 +78,9 @@ service usercenter {
 	@doc "重置密码"
 	@handler resetPassword
 	post /api/auth/resetpassword (ResetPasswordRequest) returns (ResetPasswordResponse)
+
+	@doc "用户认证"
+	@handler authenticationUser
+	get /api/auth/authentication (AuthenticationUserRequest) returns (AuthenticationUserResponse)
 }
 

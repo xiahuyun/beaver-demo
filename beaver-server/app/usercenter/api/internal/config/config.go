@@ -18,4 +18,9 @@ type Config struct {
 	}
 
 	UsercenterRpc zrpc.RpcClientConf
+
+	JwtAuth struct {
+		AccessSecret string
+		AccessExpire int64
+	}
 }

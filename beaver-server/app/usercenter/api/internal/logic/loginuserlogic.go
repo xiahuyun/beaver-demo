@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"beaver-server/app/pkg/token"
 	"beaver-server/app/usercenter/api/internal/svc"
 	"beaver-server/app/usercenter/api/internal/types"
 	"beaver-server/app/usercenter/rpc/usercenter"
@@ -40,8 +41,18 @@ func (l *LoginUserLogic) LoginUser(req *types.LoginUserRequest) (resp *types.Log
 		return nil, fmt.Errorf("login user %s failed, err: %v", req.Email, err)
 	}
 
+	// 生成token
+	token, err := l.svcCtx.TokenClint.GenerateToken(token.JwtPayLoad{
+		Name: rpcResp.Name,
+		Id:   rpcResp.Id,
+	}, l.svcCtx.Config.JwtAuth.AccessSecret, l.svcCtx.Config.JwtAuth.AccessExpire)
+	if err != nil {
+		return nil, fmt.Errorf("generate token failed, err: %v", err)
+	}
+
 	return &types.LoginUserResponse{
 		Code:    http.StatusOK,
 		Message: rpcResp.Message,
+		Token:   token,
 	}, nil
 }

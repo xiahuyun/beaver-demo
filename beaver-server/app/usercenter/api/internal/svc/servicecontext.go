@@ -8,6 +8,7 @@ import (
 	"beaver-server/app/usercenter/rpc/usercenter"
 
 	"beaver-server/app/pkg/redis"
+	"beaver-server/app/pkg/token"
 
 	"github.com/zeromicro/go-zero/zrpc"
 )
@@ -16,6 +17,7 @@ type ServiceContext struct {
 	Config        config.Config
 	Redis         *redis.Client
 	UsercenterRpc usercenter.Usercenter
+	TokenClint    token.TokenClient
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -32,5 +34,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Config:        c,
 		Redis:         redisClient,
 		UsercenterRpc: usercenter.NewUsercenter(zrpc.MustNewClient(c.UsercenterRpc)),
+		TokenClint:    token.TokenClient{},
 	}
 }

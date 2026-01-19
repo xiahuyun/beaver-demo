@@ -15,6 +15,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 用户认证
+				Method:  http.MethodGet,
+				Path:    "/api/auth/authentication",
+				Handler: authenticationUserHandler(serverCtx),
+			},
+			{
 				// 获取邮箱验证码
 				Method:  http.MethodPost,
 				Path:    "/api/auth/emailcode",

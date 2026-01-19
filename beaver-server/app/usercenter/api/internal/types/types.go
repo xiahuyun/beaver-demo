@@ -3,6 +3,15 @@
 
 package types
 
+type AuthenticationUserRequest struct {
+	Token string `header:"Token,optional"`
+}
+
+type AuthenticationUserResponse struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
 type GetEmailVerificationCodeRequest struct {
 	Email string `json:"email"`
 	Type  string `json:"type"`

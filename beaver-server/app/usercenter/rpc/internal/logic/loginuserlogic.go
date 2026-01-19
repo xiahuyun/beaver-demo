@@ -34,6 +34,8 @@ func (l *LoginUserLogic) LoginUser(in *pb.LoginUserReq) (*pb.LoginUserResp, erro
 		return nil, fmt.Errorf("password error")
 	}
 	return &pb.LoginUserResp{
+		Id:      user.Id,
+		Name:    user.Name,
 		Message: "login success",
 	}, nil
 }
