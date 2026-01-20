@@ -1,16 +1,37 @@
-<script>
-	export default {
-		onLaunch: function() {
-			console.warn('当前组件仅支持 uni_modules 目录结构 ，请升级 HBuilderX 到 3.1.0 版本以上！')
-			console.log('App Launch')
-		},
-		onShow: function() {
-			console.log('App Show')
-		},
-		onHide: function() {
-			console.log('App Hide')
+<script lang="ts">
+
+import { useInitStore } from '@/src/pinia/init/init'
+import { getLocal } from '@/src/utils/local/local';
+
+export default {
+	onLaunch: async function() {
+		console.log('App Launch')
+		
+		const initStore = useInitStore();
+		
+		if (getLocal('token')) {
+			await initStore.getAuthentication();
+		} else {
+			uni.reLaunch({url: '/pages/login/login'});
+			return
 		}
+
+		await initStore.initApp()
+		if (initStore.initError) {
+			uni.showToast({
+				title: '应用初始化失败 请稍后重试',
+				icon: 'error',
+				duration: 3000
+			});
+		}
+	},
+	onShow: function() {
+		console.log('App Show')
+	},
+	onHide: function() {
+		console.log('App Hide')
 	}
+}
 </script>
 
 <style lang="scss">

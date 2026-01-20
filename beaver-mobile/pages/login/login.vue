@@ -69,6 +69,7 @@ import { APP_CONFIG } from "@/config/data";
 import { reactive, ref, watch } from "vue";
 import { loginUserApi } from "@/src/api/auth";
 import { encodePassword } from "@/src/utils/encode/password";
+import { setLocal } from "@/src/utils/local/local";
 
 const emailTouched = ref(false);
 const isEmailValid = ref(false);
@@ -136,6 +137,9 @@ function goHome(): void {
 				animationType: 'pop-in',
 				animationDuration: 200
 			});
+			
+			setLocal('token', res.token);
+			console.log("token", res.token);
 		} else {
 			console.log("err", res)
 			if (res == '' || res.message == 'undefined') {
@@ -153,7 +157,6 @@ function goHome(): void {
 			}
 		}
 	}).catch(() => {
-		console.log(res);
 		uni.showToast({
 			title: '登录失败，请重试',
 			duration: 3000,
@@ -169,7 +172,6 @@ function goHome(): void {
 .container {
 	min-height: 100vh;
 	background-color: #FFFFFF;
-	// TODO: 为什么要设置 relative?
 	position: relative;
 }
 

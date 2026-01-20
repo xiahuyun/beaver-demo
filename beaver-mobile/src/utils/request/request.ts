@@ -4,12 +4,14 @@ import { getCommonHeader } from './common';
 export interface IResponseSuccessData<T> {
   code: number
   message: string
+  token: string
   result: T
 }
 
 export interface IResponseErrorData {
   code: number
   message: string
+  token: string
 }
 
 export interface IRequestConfig {
