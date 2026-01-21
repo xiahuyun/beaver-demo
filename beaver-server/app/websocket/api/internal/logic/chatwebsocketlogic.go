@@ -45,6 +45,8 @@ func (l *ChatWebsocketLogic) ChatWebsocket(req *types.ChatWebsocketRequest, w ht
 		conn.Close()
 	}()
 
+        l.Logger.Info("建立 WebSocket 连接")
+
 	for {
 		messageType, p, err := conn.ReadMessage()
 		if err != nil {

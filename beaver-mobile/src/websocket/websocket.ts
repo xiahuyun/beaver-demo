@@ -7,14 +7,12 @@ class WsManager {
 		return new Promise((resolve, reject) => {
 			try {
 				uni.connectSocket({
-					url: 'https://127.0.0.1:28088/api/ws/ws?token=reqreq',
+					url: `ws://127.0.0.1:20802/api/chat/websocket?token=test&userId=1`,
 					method: 'GET',
-					success() {
-						console.log('WebSocket 连接请求成功');
+					success(res) {
 						resolve();
 					},
 					fail(error) {
-						console.error('WebSocket 连接请求失败:', error);
 						reject(error);
 					}
 				});

@@ -1,6 +1,6 @@
 <script lang="ts">
 
-import { useInitStore } from '@/src/pinia/init/init'
+import { useInitStore } from '@/src/pinia/init/init';
 import { getLocal } from '@/src/utils/local/local';
 
 export default {

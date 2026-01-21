@@ -3,7 +3,8 @@
 		{
 			"path": "pages/home/home",
 			"style": {
-				"navigationBarTitleText": ""
+				"backgroundTextStyle": "dark",
+				"onReachBottomDistance": 0
 			}
 		},
 		{
@@ -39,11 +40,44 @@
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationStyle": "custom",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"app-plus": {
 			"background": "#efeff4"
 		}
+	},
+	"tabBar": {
+		"color": "#B2BEC3",
+		"selectedColor": "#FF7D45",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"iconWidth": "22px",
+		"list": [
+			{
+				"pagePath": "pages/home/home",
+				"iconPath": "static/tarBar/new-chat.png",
+				"selectedIconPath": "static/tarBar/new-chat-active.png",
+				"text": "消息"
+			},
+			{
+				"pagePath": "pages/agreement/agreement",
+				"iconPath": "static/tarBar/new-friend.png",
+				"selectedIconPath": "static/tarBar/new-friend-active.png",
+				"text": "好友"
+			},
+			{
+				"pagePath": "pages/home/home",
+				"iconPath": "static/tarBar/moment.png",
+				"selectedIconPath": "/static/tarBar/moment-active.png",
+				"text": "朋友圈"
+			},
+			{
+				"pagePath": "pages/agreement/agreement",
+				"iconPath": "static/tarBar/new-mine.png",
+				"selectedIconPath": "static/tarBar/new-mine-active.png",
+				"text": "我的"
+			}
+		]
 	}
 }

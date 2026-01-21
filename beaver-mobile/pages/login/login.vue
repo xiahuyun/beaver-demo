@@ -70,6 +70,7 @@ import { reactive, ref, watch } from "vue";
 import { loginUserApi } from "@/src/api/auth";
 import { encodePassword } from "@/src/utils/encode/password";
 import { setLocal } from "@/src/utils/local/local";
+import { useInitStore } from '@/src/pinia/init/init';
 
 const emailTouched = ref(false);
 const isEmailValid = ref(false);
@@ -79,6 +80,8 @@ const passwordTouched = ref(false);
 const isPasswordValid = ref(false);
 
 const isFormValid = ref(false);
+
+const initStore = useInitStore();
 
 interface UserInfo {
 	email: string;
@@ -125,21 +128,25 @@ function navigateToPage(url: string): void {
 	})
 }
 
-function goHome(): void {
-	loginUserApi({
-		email: userInfo.email,
-		password: encodePassword(userInfo.password, APP_CONFIG.salt)
-	}).then((res) => {
+async function goHome(): Promise<void> {
+	try {
+		const res = await loginUserApi({
+			email: userInfo.email,
+			password: encodePassword(userInfo.password, APP_CONFIG.salt)
+		});
+
 		if (res.code === 200) {
 			console.log(res);
+			setLocal('token', res.token);
+			console.log("token", res.token);
+
+			await initStore.initApp();
+
 			uni.reLaunch({
 				url: "/pages/home/home",
 				animationType: 'pop-in',
 				animationDuration: 200
 			});
-			
-			setLocal('token', res.token);
-			console.log("token", res.token);
 		} else {
 			console.log("err", res)
 			if (res == '' || res.message == 'undefined') {
@@ -156,13 +163,13 @@ function goHome(): void {
 				});
 			}
 		}
-	}).catch(() => {
+	} catch (error) {
 		uni.showToast({
 			title: '登录失败，请重试',
 			duration: 3000,
 			icon: 'error',
 		});
-	});
+	}
 }
 
 </script>

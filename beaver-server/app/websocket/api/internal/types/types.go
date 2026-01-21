@@ -4,8 +4,8 @@
 package types
 
 type ChatWebsocketRequest struct {
-	UserID string `header:"Beaver-User-Id"` // 用户ID，用于身份识别
-	Token  string `header:"token"`          // 用户token，用于验证
+	UserID string `form:"userId"` // 用户ID，用于身份识别
+	Token  string `form:"token"`  // 用户token，用于验证
 }
 
 type ChatWebsocketResponse struct {

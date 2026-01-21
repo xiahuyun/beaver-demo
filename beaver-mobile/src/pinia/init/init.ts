@@ -42,6 +42,7 @@ export const useInitStore = defineStore('useInitStore', {
 		*/
 		async initApp(): Promise<void> {
 			if (this.isInitializing || this.isInitialized) {
+				console.log("already initialized")
 				return;
 			}
 			
@@ -58,12 +59,11 @@ export const useInitStore = defineStore('useInitStore', {
 				
 				// 初始化 WebSocket 连接
 				await wsManager.initSocket();
-				
-				
+
+				this.isInitialized = true;
 			} catch (error) {
 				this.initError = error instanceof Error ? error : new Error('App init failed');
 			} finally {
-				console.log("ok");
 				this.isInitializing = false;
 				this.isInitialized = true;
 			}

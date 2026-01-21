@@ -35,8 +35,10 @@ declare module '*.sass'
 // env.json 类型定义
 declare module '@/env.json' {
   const env: {
-    baseUrl: string
+    baseUrl: string,
+	wsUrl: string
   }
   export default env
   export const baseUrl: string
+  export const wsUrl: string
 }
