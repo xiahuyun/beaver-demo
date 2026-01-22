@@ -1,0 +1,13 @@
+<template>
+	<view class="">
+		搜索朋友
+	</view>
+</template>
+
+<script setup>
+
+</script>
+
+<style lang="scss" scoped>
+
+</style>
