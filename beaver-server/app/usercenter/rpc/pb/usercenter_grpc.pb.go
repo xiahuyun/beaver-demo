@@ -22,6 +22,7 @@ const (
 	Usercenter_RegisterUser_FullMethodName  = "/pb.usercenter/registerUser"
 	Usercenter_LoginUser_FullMethodName     = "/pb.usercenter/loginUser"
 	Usercenter_ResetPassword_FullMethodName = "/pb.usercenter/resetPassword"
+	Usercenter_SearchUser_FullMethodName    = "/pb.usercenter/SearchUser"
 )
 
 // UsercenterClient is the client API for Usercenter service.
@@ -34,6 +35,8 @@ type UsercenterClient interface {
 	LoginUser(ctx context.Context, in *LoginUserReq, opts ...grpc.CallOption) (*LoginUserResp, error)
 	// 重置密码
 	ResetPassword(ctx context.Context, in *ResetPasswordReq, opts ...grpc.CallOption) (*ResetPasswordResp, error)
+	// 搜索用户
+	SearchUser(ctx context.Context, in *SearchUserReq, opts ...grpc.CallOption) (*SearchUserRes, error)
 }
 
 type usercenterClient struct {
@@ -74,6 +77,16 @@ func (c *usercenterClient) ResetPassword(ctx context.Context, in *ResetPasswordR
 	return out, nil
 }
 
+func (c *usercenterClient) SearchUser(ctx context.Context, in *SearchUserReq, opts ...grpc.CallOption) (*SearchUserRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SearchUserRes)
+	err := c.cc.Invoke(ctx, Usercenter_SearchUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsercenterServer is the server API for Usercenter service.
 // All implementations must embed UnimplementedUsercenterServer
 // for forward compatibility.
@@ -84,6 +97,8 @@ type UsercenterServer interface {
 	LoginUser(context.Context, *LoginUserReq) (*LoginUserResp, error)
 	// 重置密码
 	ResetPassword(context.Context, *ResetPasswordReq) (*ResetPasswordResp, error)
+	// 搜索用户
+	SearchUser(context.Context, *SearchUserReq) (*SearchUserRes, error)
 	mustEmbedUnimplementedUsercenterServer()
 }
 
@@ -102,6 +117,9 @@ func (UnimplementedUsercenterServer) LoginUser(context.Context, *LoginUserReq) (
 }
 func (UnimplementedUsercenterServer) ResetPassword(context.Context, *ResetPasswordReq) (*ResetPasswordResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
+}
+func (UnimplementedUsercenterServer) SearchUser(context.Context, *SearchUserReq) (*SearchUserRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchUser not implemented")
 }
 func (UnimplementedUsercenterServer) mustEmbedUnimplementedUsercenterServer() {}
 func (UnimplementedUsercenterServer) testEmbeddedByValue()                    {}
@@ -178,6 +196,24 @@ func _Usercenter_ResetPassword_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Usercenter_SearchUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).SearchUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Usercenter_SearchUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).SearchUser(ctx, req.(*SearchUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Usercenter_ServiceDesc is the grpc.ServiceDesc for Usercenter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -196,6 +232,10 @@ var Usercenter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "resetPassword",
 			Handler:    _Usercenter_ResetPassword_Handler,
+		},
+		{
+			MethodName: "SearchUser",
+			Handler:    _Usercenter_SearchUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

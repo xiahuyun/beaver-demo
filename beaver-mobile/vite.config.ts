@@ -7,6 +7,7 @@ const uni = nodeRequire("@dcloudio/vite-plugin-uni").default;
 const envConfig = nodeRequire('./env.json');
 const baseUrl = envConfig.baseUrl;
 const wsUrl = envConfig.wsUrl;
+const friendUrl = envConfig.friendUrl;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -25,13 +26,18 @@ export default defineConfig({
   },
   server: {
 	proxy: {
-		'/api': {
+		'/api/auth': {
 			target: baseUrl,
 			changeOrigin: true,
 			rewrite: (path) => path
 		},
 		'/api/chat': {
 			target: wsUrl,
+			changeOrigin: true,
+			rewrite: (path) => path
+		},
+		'/api/friend': {
+			target: friendUrl,
 			changeOrigin: true,
 			rewrite: (path) => path
 		}

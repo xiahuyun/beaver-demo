@@ -22,7 +22,6 @@ CREATE TABLE user (
     update_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     avatar varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
     register_type varchar(255) NOT NULL DEFAULT '' COMMENT 'The user register type, email|phone',
-    UNIQUE phone_index (phone),
     UNIQUE email_index (email),
     PRIMARY KEY (id)
 ) ENGINE = InnoDB COLLATE utf8mb4_general_ci COMMENT 'user table';

@@ -20,6 +20,9 @@ type (
 	RegisterUserResp  = pb.RegisterUserResp
 	ResetPasswordReq  = pb.ResetPasswordReq
 	ResetPasswordResp = pb.ResetPasswordResp
+	SearchUserReq     = pb.SearchUserReq
+	SearchUserRes     = pb.SearchUserRes
+	UserInfo          = pb.UserInfo
 
 	Usercenter interface {
 		// 注册用户
@@ -28,6 +31,8 @@ type (
 		LoginUser(ctx context.Context, in *LoginUserReq, opts ...grpc.CallOption) (*LoginUserResp, error)
 		// 重置密码
 		ResetPassword(ctx context.Context, in *ResetPasswordReq, opts ...grpc.CallOption) (*ResetPasswordResp, error)
+		// 搜索用户
+		SearchUser(ctx context.Context, in *SearchUserReq, opts ...grpc.CallOption) (*SearchUserRes, error)
 	}
 
 	defaultUsercenter struct {
@@ -57,4 +62,10 @@ func (m *defaultUsercenter) LoginUser(ctx context.Context, in *LoginUserReq, opt
 func (m *defaultUsercenter) ResetPassword(ctx context.Context, in *ResetPasswordReq, opts ...grpc.CallOption) (*ResetPasswordResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.ResetPassword(ctx, in, opts...)
+}
+
+// 搜索用户
+func (m *defaultUsercenter) SearchUser(ctx context.Context, in *SearchUserReq, opts ...grpc.CallOption) (*SearchUserRes, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.SearchUser(ctx, in, opts...)
 }

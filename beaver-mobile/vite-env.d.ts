@@ -36,9 +36,11 @@ declare module '*.sass'
 declare module '@/env.json' {
   const env: {
     baseUrl: string,
-	wsUrl: string
+	wsUrl: string,
+	friendUrl: string
   }
   export default env
   export const baseUrl: string
   export const wsUrl: string
+  export const friendUrl: string
 }

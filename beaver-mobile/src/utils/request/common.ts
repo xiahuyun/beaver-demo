@@ -14,9 +14,10 @@ export const getCommonHeader = () => {
 export const getLocal = (keys: string) =>{
   let value = uni.getStorageSync(keys)
   if (value) {
-      return JSON.parse(value)
+	  console.log("get local key:value", keys, value);
+      return value;
   } else {
-      return value
+      return value;
   }
 }
 

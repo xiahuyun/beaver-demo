@@ -4,6 +4,14 @@ option go_package = "./pb";
 
 package pb;
 
+message UserInfo {
+  string name = 1;   // 用户ID
+  string nickname = 2;
+  string avatar = 3;
+  string email = 5;
+  string gender = 6;
+}
+
 message RegisterUserReq {
     optional string  email = 1;
     optional string  phone = 2;
@@ -35,6 +43,14 @@ message ResetPasswordResp {
     string message = 1;
 }
 
+message SearchUserReq {
+  string email = 1;
+}
+
+message SearchUserRes {
+  UserInfo user_info = 1; // 用户信息
+}
+
 service usercenter {
     // 注册用户
     rpc registerUser(RegisterUserReq)returns(RegisterUserResp);
@@ -44,4 +60,7 @@ service usercenter {
 
     // 重置密码
     rpc resetPassword(ResetPasswordReq)returns(ResetPasswordResp);
+
+    // 搜索用户
+    rpc SearchUser(SearchUserReq) returns(SearchUserRes); 
 }

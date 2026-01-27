@@ -48,7 +48,6 @@
 			<!-- 右侧占位符 -->
 			<view v-else class="header-placeholder"></view>
 		</view>
-		<view class="test">我是测试组件</view>
 	</view>
 </template>
 

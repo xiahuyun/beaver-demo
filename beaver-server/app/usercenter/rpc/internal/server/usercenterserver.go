@@ -40,3 +40,9 @@ func (s *UsercenterServer) ResetPassword(ctx context.Context, in *pb.ResetPasswo
 	l := logic.NewResetPasswordLogic(ctx, s.svcCtx)
 	return l.ResetPassword(in)
 }
+
+// 搜索用户
+func (s *UsercenterServer) SearchUser(ctx context.Context, in *pb.SearchUserReq) (*pb.SearchUserRes, error) {
+	l := logic.NewSearchUserLogic(ctx, s.svcCtx)
+	return l.SearchUser(in)
+}

@@ -1,0 +1,13 @@
+Name: friend
+Host: 0.0.0.0
+Port: 20803
+
+UsercenterRpc:
+  Endpoints: 
+  - 127.0.0.1:20801 
+  NonBlock: true
+
+FriendRpc:
+  Endpoints: 
+  - 127.0.0.1:20804
+  NonBlock: true

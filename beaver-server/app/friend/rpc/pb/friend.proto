@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+message isFriendReq {
+  string userId1 = 1;   
+  string userId2 = 2;
+}
+
+message isFriendRes {
+    bool isFriend = 1;
+}
+
+service friend {
+    // 是否好友
+    rpc isFriend(isFriendReq)returns(isFriendRes);
+}
