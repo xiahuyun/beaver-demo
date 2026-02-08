@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { getLocal } from '@/src/utils/local/local';
 import { authenticationApi } from '@/src/api/auth';
+import { useFriendStore } from '../friend/friend';
+
 import wsManager from '@/src/websocket/websocket'
 
 /**
@@ -60,6 +62,14 @@ export const useInitStore = defineStore('useInitStore', {
 				// 初始化 WebSocket 连接
 				await wsManager.initSocket();
 
+				const stores = {
+					friend: useFriendStore(),
+				}
+				
+				await Promise.all([
+					stores.friend.initFriendApi(),
+				])
+				
 				this.isInitialized = true;
 			} catch (error) {
 				this.initError = error instanceof Error ? error : new Error('App init failed');

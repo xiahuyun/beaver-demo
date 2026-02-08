@@ -7,7 +7,7 @@ export const getCommonHeader = () => {
   return {
     token: token,
     deviceId: deviceId,
-    version: appVersion()
+    version: appVersion(),
   }
 }
 

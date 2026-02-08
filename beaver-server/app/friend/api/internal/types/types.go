@@ -42,3 +42,14 @@ type User struct {
 	Avatar   string `json:"avatar"`
 	Email    string `json:"email"`
 }
+
+type AddFriendReq struct {
+	UserID   string `header:"Beaver-User-Id"` // 当前用户ID
+	FriendID string `json:"friendId"`         // 要添加的好友用户ID
+	Verify   string `json:"verify,optional"`  // 验证消息，可选
+	Source   string `json:"source"`           // 添加好友来源：email(邮箱搜索)/qrcode(扫码)/userId(用户ID搜索)
+}
+
+type AddFriendRes struct {
+	Version int64 `json:"version"` // 好友验证版本号
+}

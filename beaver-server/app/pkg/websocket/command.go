@@ -1,0 +1,22 @@
+package websocket
+
+// 定义消息命令和类型
+type WebsocketCommand string
+
+// 消息主类型
+const (
+	// 聊天消息类
+	CHAT_MESSAGE WebsocketCommand = "CHAT_MESSAGE"
+	// 好友关系类
+	FRIEND_OPERATION WebsocketCommand = "FRIEND_OPERATION"
+	// 群组操作类
+	GROUP_OPERATION WebsocketCommand = "GROUP_OPERATION"
+	// 用户信息类
+	USER_PROFILE WebsocketCommand = "USER_PROFILE"
+	// 通知中心类
+	NOTIFICATION WebsocketCommand = "NOTIFICATION"
+	// 表情中心类
+	EMOJI WebsocketCommand = "EMOJI"
+	// 心跳消息类（应用级心跳）
+	HEARTBEAT WebsocketCommand = "HEARTBEAT"
+)

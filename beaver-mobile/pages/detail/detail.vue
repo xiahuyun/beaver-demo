@@ -179,6 +179,7 @@ const viewAllPhotos = () => {
 };
 
 const handleAddFriendSuccess = () => {
+	console.log("add friend finished");
 	uni.showToast({ title: '添加好友成功', icon: 'success' });
 	isFriend.value = true; // 更新好友状态
 	uni.navigateBack(); // 返回上一页

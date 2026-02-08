@@ -10,3 +10,15 @@ type ChatWebsocketRequest struct {
 
 type ChatWebsocketResponse struct {
 }
+
+type ProxySendMsgReq struct {
+	UserID         string                 `header:"Beaver-User-Id"`        // 发送者ID
+	Command        string                 `json:"command"`                 // 命令类型：send（发送）、recall（撤回）
+	TargetID       string                 `json:"targetId"`                // 目标ID（用户ID或群ID）
+	Type           string                 `json:"type"`                    // 消息类型
+	ConversationId string                 `json:"conversationId,optional"` // 会话ID
+	Body           map[string]interface{} `json:"body"`                    // 消息内容，需要包含 messageId
+}
+
+type ProxySendMsgRes struct {
+}

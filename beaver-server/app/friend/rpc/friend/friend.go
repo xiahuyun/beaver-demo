@@ -14,12 +14,16 @@ import (
 )
 
 type (
-	IsFriendReq = pb.IsFriendReq
-	IsFriendRes = pb.IsFriendRes
+	IsFriendReq       = pb.IsFriendReq
+	IsFriendRes       = pb.IsFriendRes
+	IsFriendVerifyReq = pb.IsFriendVerifyReq
+	IsFriendVerifyRes = pb.IsFriendVerifyRes
 
 	Friend interface {
 		// 是否好友
 		IsFriend(ctx context.Context, in *IsFriendReq, opts ...grpc.CallOption) (*IsFriendRes, error)
+		// 是否验证中
+		IsFriendVerify(ctx context.Context, in *IsFriendVerifyReq, opts ...grpc.CallOption) (*IsFriendVerifyRes, error)
 	}
 
 	defaultFriend struct {
@@ -37,4 +41,10 @@ func NewFriend(cli zrpc.Client) Friend {
 func (m *defaultFriend) IsFriend(ctx context.Context, in *IsFriendReq, opts ...grpc.CallOption) (*IsFriendRes, error) {
 	client := pb.NewFriendClient(m.cli.Conn())
 	return client.IsFriend(ctx, in, opts...)
+}
+
+// 是否验证中
+func (m *defaultFriend) IsFriendVerify(ctx context.Context, in *IsFriendVerifyReq, opts ...grpc.CallOption) (*IsFriendVerifyRes, error) {
+	client := pb.NewFriendClient(m.cli.Conn())
+	return client.IsFriendVerify(ctx, in, opts...)
 }

@@ -134,8 +134,8 @@ async function goHome(): Promise<void> {
 			email: userInfo.email,
 			password: encodePassword(userInfo.password, APP_CONFIG.salt)
 		});
-
-		if (res.code === 200) {
+		
+		if (res.code === 0) {
 			console.log(res);
 			setLocal('token', res.token);
 			console.log("token", res.token);

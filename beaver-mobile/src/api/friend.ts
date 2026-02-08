@@ -6,6 +6,8 @@ import type {
 	IFriendInfo,
 	IAddFriendReq,
 	IAddFriendRes,
+	IFriendListReq,
+	IFriendListRes,
 } from '@/src/types/ajax/friend'
 
 /**
@@ -38,5 +40,16 @@ export const addFriendApi = (data: IAddFriendReq) => {
     data: data,
     method: 'POST',
     url: `/api/friend/add_friend`
+  })
+}
+
+/**
+ * @description: 好友列表
+ */
+export const friendListApi = (data: IFriendListReq) => {
+  return request<IFriendListRes>({
+    method: 'GET',
+    data: data,
+    url: `/api/friend/friend_list`
   })
 }

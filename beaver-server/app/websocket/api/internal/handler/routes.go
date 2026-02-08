@@ -15,6 +15,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// HTTP API发送消息
+				Method:  http.MethodPost,
+				Path:    "/api/chat/proxySendMsg",
+				Handler: proxySendMsgHandler(serverCtx),
+			},
+			{
 				// WebSocket连接
 				Method:  http.MethodGet,
 				Path:    "/api/chat/websocket",

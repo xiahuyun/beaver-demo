@@ -29,7 +29,8 @@ export const request = <T> (config: IRequestConfig): Promise<IResponseSuccessDat
 			requestId,
 			...config?.header || {},
 			'content-type': 'application/json;charset=UTF-8', 
-			...getCommonHeader()
+			...getCommonHeader(),
+			'Beaver-User-Id': 'xiahuyun043@126.com',
 		}
 
 		uni.request({
@@ -38,8 +39,18 @@ export const request = <T> (config: IRequestConfig): Promise<IResponseSuccessDat
 			data: config.data,
 			header: requestConfig,
 			success: (res: any) => {
-				const data = res.data as IResponseSuccessData<T>;
-				resolve(data);
+				if (res.statusCode === 200) {
+					const data = res.data as IResponseSuccessData<T>;
+					data.code = 0;
+					resolve(data);
+					console.log("result success: ", res);
+				} else {
+					resolve({
+						code: -1,
+						message: res.data,
+					} as IResponseSuccessData<T>);
+					console.log("result failed: ", res);
+				}
 			},
 			fail: (err: UniApp.GeneralCallbackResult) => {
 				console.log("request fail with data: ", err);

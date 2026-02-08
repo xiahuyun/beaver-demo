@@ -53,6 +53,10 @@ const props = defineProps({
 	source: {
 		type: String,
 		default: ''
+	},
+	userId: {
+		type: String,
+		default: ''
 	}
 })
 
@@ -82,8 +86,9 @@ const handleConfirmAddFriend = async () => {
 			source: props.source
 		});
 		
+		console.log("add friend result: ", res);
 		if (res.code === 0) {
-			uni.showToast({ title: '好友请求发送成功', icon: 'success' });
+			uni.showToast({ title: '好友请求发送成功', icon: 'success', duration: 3000 });
 			emit('add-friend-success');
 			showDialog.value = false;
 		} else {

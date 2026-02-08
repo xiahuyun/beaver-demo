@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Friend_IsFriend_FullMethodName = "/pb.friend/isFriend"
+	Friend_IsFriend_FullMethodName       = "/pb.friend/isFriend"
+	Friend_IsFriendVerify_FullMethodName = "/pb.friend/isFriendVerify"
 )
 
 // FriendClient is the client API for Friend service.
@@ -28,6 +29,8 @@ const (
 type FriendClient interface {
 	// 是否好友
 	IsFriend(ctx context.Context, in *IsFriendReq, opts ...grpc.CallOption) (*IsFriendRes, error)
+	// 是否验证中
+	IsFriendVerify(ctx context.Context, in *IsFriendVerifyReq, opts ...grpc.CallOption) (*IsFriendVerifyRes, error)
 }
 
 type friendClient struct {
@@ -48,12 +51,24 @@ func (c *friendClient) IsFriend(ctx context.Context, in *IsFriendReq, opts ...gr
 	return out, nil
 }
 
+func (c *friendClient) IsFriendVerify(ctx context.Context, in *IsFriendVerifyReq, opts ...grpc.CallOption) (*IsFriendVerifyRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IsFriendVerifyRes)
+	err := c.cc.Invoke(ctx, Friend_IsFriendVerify_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FriendServer is the server API for Friend service.
 // All implementations must embed UnimplementedFriendServer
 // for forward compatibility.
 type FriendServer interface {
 	// 是否好友
 	IsFriend(context.Context, *IsFriendReq) (*IsFriendRes, error)
+	// 是否验证中
+	IsFriendVerify(context.Context, *IsFriendVerifyReq) (*IsFriendVerifyRes, error)
 	mustEmbedUnimplementedFriendServer()
 }
 
@@ -66,6 +81,9 @@ type UnimplementedFriendServer struct{}
 
 func (UnimplementedFriendServer) IsFriend(context.Context, *IsFriendReq) (*IsFriendRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsFriend not implemented")
+}
+func (UnimplementedFriendServer) IsFriendVerify(context.Context, *IsFriendVerifyReq) (*IsFriendVerifyRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsFriendVerify not implemented")
 }
 func (UnimplementedFriendServer) mustEmbedUnimplementedFriendServer() {}
 func (UnimplementedFriendServer) testEmbeddedByValue()                {}
@@ -106,6 +124,24 @@ func _Friend_IsFriend_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Friend_IsFriendVerify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsFriendVerifyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FriendServer).IsFriendVerify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Friend_IsFriendVerify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FriendServer).IsFriendVerify(ctx, req.(*IsFriendVerifyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Friend_ServiceDesc is the grpc.ServiceDesc for Friend service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -116,6 +152,10 @@ var Friend_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "isFriend",
 			Handler:    _Friend_IsFriend_Handler,
+		},
+		{
+			MethodName: "isFriendVerify",
+			Handler:    _Friend_IsFriendVerify_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

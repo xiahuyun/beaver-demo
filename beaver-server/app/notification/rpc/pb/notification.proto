@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+// 业务侧投递通知事件（好友申请、点赞等）
+message PushEventReq {
+  string event_type = 1;        // 必填：friend_request/moment_like/moment_comment/group_join/...
+  string category = 2;          // 必填：social/moment/group/system
+  string from_user_id = 3;      // 触发方
+  string target_id = 4;         // 目标对象ID（如动态ID、群ID、用户ID）
+  string target_type = 5;       // 目标类型：moment/group/user/other
+  string payload_json = 6;      // 扩展数据JSON（前端可渲染）
+  repeated string to_user_ids = 7; // 接收人列表
+  string dedup_hash = 8;        // 可选，幂等/合并用
+}
+
+message PushEventRes {
+  string event_id = 1;  // 生成的事件ID
+  int64 version = 2;    // 事件版本（全局序列）
+}
+
+service notification {
+  rpc PushEvent(PushEventReq) returns (PushEventRes);  // 业务推事件
+}

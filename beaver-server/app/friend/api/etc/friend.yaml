@@ -11,3 +11,16 @@ FriendRpc:
   Endpoints: 
   - 127.0.0.1:20804
   NonBlock: true
+
+NotifyRpc:
+  Endpoints: 
+  - 127.0.0.1:20805
+  NonBlock: true
+
+Cache:
+  Addr: 127.0.0.1:6379
+  Password: "Troy@0403"
+  DB: 0 
+
+DB:
+  DataSource: root:Troy@0403@tcp(127.0.0.1:3306)/beaverdemo_usercenter?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai

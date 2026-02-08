@@ -13,7 +13,19 @@ message isFriendRes {
     bool isFriend = 1;
 }
 
+message isFriendVerifyReq {
+  string userId1 = 1;   
+  string userId2 = 2;
+}
+
+message isFriendVerifyRes {
+    bool isFriendVerify = 1;
+}
+
 service friend {
     // 是否好友
     rpc isFriend(isFriendReq)returns(isFriendRes);
+
+    // 是否验证中
+    rpc isFriendVerify(isFriendVerifyReq)returns(isFriendVerifyRes);
 }

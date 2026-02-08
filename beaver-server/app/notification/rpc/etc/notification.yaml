@@ -1,0 +1,15 @@
+Name: notification.rpc
+ListenOn: 0.0.0.0:20805
+
+Cache:
+  - Host: 127.0.0.1:6379
+    Pass: Troy@0403
+
+CacheConf:
+  Addr: 127.0.0.1:6379
+  Password: "Troy@0403"
+  DB: 0 
+
+DB:
+  DataSource: root:Troy@0403@tcp(127.0.0.1:3306)/beaverdemo_usercenter?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+

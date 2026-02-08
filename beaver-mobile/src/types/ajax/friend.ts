@@ -40,6 +40,17 @@ export interface IAddFriendReq {
   source: string; // 添加好友来源：email(邮箱搜索)/qrcode(扫码)
 }
 
+// 好友列表请求
+export interface IFriendListReq {
+  page?: number;
+  limit?: number;
+}
+
+// 好友列表响应
+export interface IFriendListRes {
+  list: IFriendInfo[];
+}
+
 // 添加好友响应
 export interface IAddFriendRes {}
 

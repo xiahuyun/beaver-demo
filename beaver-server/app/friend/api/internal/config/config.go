@@ -12,4 +12,15 @@ type Config struct {
 	rest.RestConf
 	UsercenterRpc zrpc.RpcClientConf
 	FriendRpc     zrpc.RpcClientConf
+	NotifyRpc     zrpc.RpcClientConf
+
+	Cache struct {
+		Addr     string
+		Password string
+		DB       int
+	}
+
+	DB struct {
+		DataSource string
+	}
 }

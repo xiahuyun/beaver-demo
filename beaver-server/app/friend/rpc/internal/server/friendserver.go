@@ -28,3 +28,9 @@ func (s *FriendServer) IsFriend(ctx context.Context, in *pb.IsFriendReq) (*pb.Is
 	l := logic.NewIsFriendLogic(ctx, s.svcCtx)
 	return l.IsFriend(in)
 }
+
+// 是否验证中
+func (s *FriendServer) IsFriendVerify(ctx context.Context, in *pb.IsFriendVerifyReq) (*pb.IsFriendVerifyRes, error) {
+	l := logic.NewIsFriendVerifyLogic(ctx, s.svcCtx)
+	return l.IsFriendVerify(in)
+}
